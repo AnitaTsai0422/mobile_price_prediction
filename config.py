@@ -1,0 +1,1 @@
+MODEL_PATH = 'storage/model/pipelineobj.joblib'

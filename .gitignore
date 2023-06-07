@@ -1,0 +1,3 @@
+*.ipynb
+storage/data/*.csv
+storage/model/*.joblib
