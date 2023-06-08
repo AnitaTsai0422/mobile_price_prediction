@@ -11,3 +11,17 @@ class Creator:
 
     def insert_data(self, df, sql_table_name):
         df.to_sql(sql_table_name, self.conn, if_exists='append')
+
+
+
+class Reader:
+    pass
+
+
+class Updater:
+    pass
+
+
+class Deleter:
+
+    pass
