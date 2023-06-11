@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+        <center>
+          <head>
+           <meta charset="utf-8">
+
+           <title>Mobile Price Prediction</title>
+          </head>
+
+
+          <h1>手機價格預測</h1>
+          <br>
+          <br>
+          <body>
+            <form  method="post">
+                model_types: <input type="" name="model_types" value="rf"/><br>
+
+
+                battery_power: <input type="number" name="battery_power"value="27289"/>
+                blue: <input type="number" name="blue" value="663810"/>
+                clock_speed: <input type="number" name="clock_speed" value="14"/><br>
+                dual_sim: <input type="number" name="dual_sim" value="225838"/>
+                fc: <input type="number" name="fc" value="182834"/>
+                four_g: <input type="number" name="four_g" value="182834"/><br>
+                int_memory: <input type="number" name="int_memory" value="5"/>
+                m_dep: <input type="number" name="m_dep" value="8"/>
+                mobile_wt: <input type="number" name="mobile_wt" value="20980"/><br>
+                n_cores: <input type="number" name="n_cores" value="5580"/>
+                pc: <input type="number" name="pc" value="269"/>
+                px_height: <input type="number" name="px_height" value="1163"/><br>
+                px_width: <input type="number" name="px_width" value="5"/>
+                ram: <input type="number" name="ram" value="3"/>
+                sc_h: <input type="number" name="sc_h" value="0"/><br>
+                sc_w: <input type="number" name="sc_w" value="104"/>
+                talk_time: <input type="number" name="talk_time" value="1120"/>
+                three_g: <input type="number" name="three_g" value="3"/><br>
+                touch_screen: <input type="number" name="touch_screen" value="333"/>
+                wifi: <input type="number" name="wifi" value="777"/>
+                
+
+                
+
+                       <input type="submit">
+            </form>
+
+
+            <p>result: {{ result }}  </p>
+            
+
+          </body>
+        </center>
+</html>

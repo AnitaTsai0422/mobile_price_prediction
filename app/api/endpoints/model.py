@@ -1,11 +1,13 @@
 import os
 import sqlite3
 import joblib
+from typing import Union
 
 import pandas as pd
 from fastapi import APIRouter
 from fastapi import Request, Form
 from fastapi.templating import Jinja2Templates
+from pydantic import parse_obj_as
 
 
 from app.service.inference.inference import Prediction
@@ -15,7 +17,7 @@ from app.model.model import UserInput
 
 router = APIRouter(tags=["Anita"])
 
-templates = Jinja2Templates(directory="view/")
+templates = Jinja2Templates(directory="app/view/")
 
 RANDOM_FOREST = None
 XGB = None
@@ -29,38 +31,26 @@ async def form_post(request: Request):
 
 @router.post('/')
 async def get_mobile_result(request: Request, 
-                            # battery_power=Form(...), 
-                            # blue=Form(...),
-                            # clock_speed=Form(...),
-                            # dual_sim=Form(...),
-                            # fc=Form(...),
-                            # int_memory=Form(...),
-                            # m_dep=Form(...),
-                            # mobile_wt=Form(...),
-                            # n_cores=Form(...),
-                            # pc=Form(...),
-                            # px_height=Form(...),
-                            # px_width=Form(...),
-                            # ram=Form(...),
-                            # sc_h=Form(...),
-                            # sc_w=Form(...),
-                            # talk_time=Form(...),
-                            # three_g=Form(...),
-                            # touch_screen=Form(...),
-                            # wifi=Form(...),
-                            # model_types=Form(...)
-                            user_input: UserInput
                             ):
 
     try: 
-        response = await request.json()
-        print(response)
-        features = response['featutres'] # expect the type is {'a':333, ...}
-        model_type = response['model']
+        
+        response = await request.form()
+        response = parse_obj_as(UserInput, response)
+
+        response_dict = dict(response)
+        print(111, response_dict)
+
+
+        model_type = response_dict.pop('model_types')
+
+        features = response_dict
+
         
         if model_type == 'rf':
             global RANDOM_FOREST
             if RANDOM_FOREST is None:
+                print('reading model ...')
                 model = joblib.load('storage/model/pipelineobj.joblib')
 
         # elif model_type == 'xgb':
@@ -70,16 +60,18 @@ async def get_mobile_result(request: Request,
         #         model = joblib.load('')
 
         
+        print('start prediction')
 
         p = Prediction(model, features)
-        result = p.predict(pd.DataFrame(features))
+        result_df = p.predict(pd.DataFrame(features, index=[0]))
+        result = {'價格類別': result_df['pred'].values[0]}
 
         global CONN
         db_creator = Creator(CONN)
-        db_creator.insert_data(result, 'anita_prediction')
+        db_creator.insert_data(result_df, 'anita_prediction')
 
 
-        return  templates.TemplateResponse('index.html', context={'request': request, 'result': result.to_json()})
+        return  templates.TemplateResponse('index.html', context={'request': request, 'result': result})
     
     except Exception as e:
         print(f"Error encountered in CHATBOT ENDPOINT: {e}")
